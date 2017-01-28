@@ -1,6 +1,7 @@
 package com.example.gofrendi.finder;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -14,8 +15,10 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -72,7 +75,8 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_login) {
+            this.showLogin();
             return true;
         }
 
@@ -106,14 +110,23 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    /***********************************************************
+    public void showLogin(){
+        Intent intent = new Intent(this, LoginActivity.class);
+        //EditText editText = (EditText) findViewById(R.id.edit_message);
+        //String message = editText.getText().toString();
+        String message = "login";
+        intent.putExtra(EXTRA_MESSAGE, message);
+        startActivity(intent);
+    }
+
+    /**
      * The commonly used methods
-     */
+     **/
 
     protected void switchLayout(int newLayoutId)
     {
         // take a look at your contents. Since your contents are "RelativeLayout", mainLayout should also be casted as RelativeLayout
-        RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.main_container);
+        LinearLayout mainLayout = (LinearLayout) findViewById(R.id.main_container);
         LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View layout = inflater.inflate(newLayoutId, null);
         mainLayout.removeAllViews();
