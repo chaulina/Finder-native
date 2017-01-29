@@ -419,7 +419,7 @@ function register(db, email, name, password, callbackSuccess, callbackError){
         var params = [email];
         db.all(sql, params, function(err, rows){
             if(rows.length == 0){
-                sql = "INSERT INTO user(email, name, password) VALUES(?,?,?)";
+                sql = "INSERT INTO user(email, name, password, lat, lon) VALUES(?,?,?, -1, -1)";
                 params = [email, name, password];
                 db.run(sql, params);
                 // also update session
