@@ -1,14 +1,14 @@
 // requires ==========================================================================
 
 var express = require('express');
+var fileUpload = require('express-fileupload');
 var http = require('http');
 var fs = require('fs');
 var sqlite3 = require('sqlite3').verbose();
-
-// global variables ==================================================================
-
 var app = express();
 var io = require('socket.io')(http.Server(app));
+
+// global functions ==================================================================
 
 function errorResponse(res){
     return function(message){
@@ -32,6 +32,7 @@ function successResponse(res){
 io.on('connection', function(){ /* … */ });
 
 app.use('/public', express.static('public'));
+app.use(fileUpload());
 
 app.get('/', function (req, res) {
     res.sendFile(__dirname+'/views/index.html');
@@ -54,7 +55,7 @@ app.get('/loginBySession', function(req, res){
         object = {session:userRow.session};
         successResponse(res)(object);
     }
-    result = loginBySession(null, session, callbackSuccess, errorResponse(res));
+    loginBySession(null, session, callbackSuccess, errorResponse(res));
 });
 
 app.get('/loginByEmail', function(req, res){
@@ -64,7 +65,7 @@ app.get('/loginByEmail', function(req, res){
         object = {session:userRow.session};
         successResponse(res)(object);
     }
-    result = loginByEmail(null, email, password, callbackSuccess, errorResponse(res));
+    loginByEmail(null, email, password, callbackSuccess, errorResponse(res));
 });
 
 app.get('/move', function(req, res){
@@ -75,7 +76,20 @@ app.get('/move', function(req, res){
         object = {session:userRow.session};
         successResponse(res)(object);
     }
-    result = move(null, session, newLat, newLon, callbackSuccess, errorResponse(res));
+    move(null, session, newLat, newLon, callbackSuccess, errorResponse(res));
+});
+
+app.post('/changeProfilePicture', function(req, res){
+    session = req.body.session;
+    file = req.files.profilePicture;
+    file.mv(__dirname+'/public/uploads/'+file.name, function(err){
+        // update database
+        callbackSuccess = function(db, userRow){
+            object = {session:userRow.session};
+            successResponse(res)(object);
+        }
+        changeProfilePicture(null, session, file.name, callbackSuccess, errorResponse(res));
+    });
 });
 
 app.get('/swipeRight', function(req, res){
@@ -85,7 +99,7 @@ app.get('/swipeRight', function(req, res){
         object = {session:userRow.session};
         successResponse(res)(object);
     }
-    result = swipeRight(null, session, targetEmail, callbackSuccess, errorResponse(res));
+    swipeRight(null, session, targetEmail, callbackSuccess, errorResponse(res));
 });
 
 app.get('/chat', function(req, res){
@@ -96,7 +110,7 @@ app.get('/chat', function(req, res){
         object = {session:userRow.session};
         successResponse(res)(object);
     }
-    result = chat(null, session, targetEmail, message, callbackSuccess, errorResponse(res));
+    chat(null, session, targetEmail, message, callbackSuccess, errorResponse(res));
 });
 
 app.get('/getAvailableUserList', function(req, res){
@@ -106,7 +120,7 @@ app.get('/getAvailableUserList', function(req, res){
         object = {session:userRow.session, userList:availableUserList};
         successResponse(res)(object);
     }
-    result = getAvailableUserList(null, session, radius, callbackSuccess, errorResponse(res));
+    getAvailableUserList(null, session, radius, callbackSuccess, errorResponse(res));
 });
 
 app.get('/getMatchList', function(req, res){
@@ -115,7 +129,7 @@ app.get('/getMatchList', function(req, res){
         object = {session:userRow.session, userList:matchList};
         successResponse(res)(object);
     }
-    result = getMatchList(null, session, callbackSuccess, errorResponse(res));
+    getMatchList(null, session, callbackSuccess, errorResponse(res));
 });
 
 app.get('/getChatList', function(req, res){
@@ -125,7 +139,7 @@ app.get('/getChatList', function(req, res){
         object = {session:userRow.session, chatList:list};
         successResponse(res)(object);
     }
-    result = getChatList(null, session, targetEmail, callbackSuccess, errorResponse(res));
+    getChatList(null, session, targetEmail, callbackSuccess, errorResponse(res));
 });
 
 app.get('/test', function(req, res){
@@ -349,7 +363,7 @@ function runDb(db, callback){
     // do database action
     db.serialize(function(){
         // create table if not exists
-        db.run("CREATE TABLE IF NOT EXISTS user(email TEXT, name TEXT, password TEXT, session TEXT, lon DOUBLE, lat DOUBLE)");
+        db.run("CREATE TABLE IF NOT EXISTS user(email TEXT, name TEXT, password TEXT, session TEXT, lon DOUBLE, lat DOUBLE, profile_picture TEXT)");
         db.run("CREATE TABLE IF NOT EXISTS match(email_from TEXT, email_to TEXT)");
         db.run("CREATE TABLE IF NOT EXISTS chat(email_from TEXT, email_to TEXT, message TEXT, time TEXT)");
         // run callback
@@ -492,6 +506,27 @@ function move(db, session, newLat, newLon, callbackSuccess, callbackError){
 }
 
 /**
+ * changeProfilePicture
+ * @param {Object} db
+ * @param {Object} session
+ * @param {Object} file
+ * @param {Function} callbackSuccess(db, userRow)
+ * @param {Function} callbackError(errorMessage)
+ */
+function changeProfilePicture(db, session, fileName, callbackSuccess, callbackError){
+    console.log(session);
+    callbackLoginBySession = function(db, currentUser){
+        var sql = "UPDATE user SET profile_picture=? WHERE email=?";
+        var params = [fileName, currentUser.email];
+        db.run(sql, params);
+        if(typeof callbackSuccess == 'function'){
+            getUser(db, currentUser.session, callbackSuccess, callbackError);
+        }
+    }
+    loginBySession(db, session, callbackLoginBySession, callbackError);
+}
+
+/**
  * Swipe right (add to match table)
  * @param {Object} db
  * @param {String} session
@@ -547,6 +582,8 @@ function chat(db, session, targetEmail, message, callbackSuccess, callbackError)
             var sql = "INSERT INTO chat(email_from, email_to, message, time) VALUES(?,?,?,?)";
             var params = [currentUser.email, targetEmail, message, dateToStr(new Date(Date.now()))];
             db.run(sql, params);
+            // push notification to clients
+            io.emit('chat-to-'+targetEmail, message);
             if(typeof callbackSuccess === 'function'){
                 callbackSuccess(db, currentUser);
             }

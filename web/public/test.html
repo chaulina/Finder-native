@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Test</title>
+    </head>
+    <body>
+        <input id="email" placeholder="email" />
+        <input id="password" placeholder="password" />
+        <button id="login">Submit</button>
+
+        <form enctype="multipart/form-data" method="post" action="http://localhost:3000/changeProfilePicture">
+            <input id="session" name="session" />
+            <input type="file" name="profilePicture" />
+            <button>Upload</button>
+        </form>
+
+    </body>
+    <script src="jquery-3.1.1.min.js"></script>
+    <script>
+        $('#login').click(function(){
+            $.ajax({
+                'url' : 'http://localhost:3000/loginByEmail',
+                'data' : {
+                    'email' : $('#email').val(), 
+                    'password' : $('#password').val()
+                },
+                'dataType' : 'json',
+                'success' : function(response){
+                    $('#session').val(response.session);
+                    console.log("sesion " + session);
+                }
+            });
+        });
+    </script>
+</html>
