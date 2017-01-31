@@ -1,4 +1,4 @@
-package com.example.gofrendi.finder;
+package com.finder.gofrendi.finder;
 
 import org.junit.Test;
 
