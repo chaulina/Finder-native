@@ -296,8 +296,9 @@ app.get('/test', function(req, res){
     runDb(db, test, callbackError);
 });
 
-app.listen(3000, function () {
-    console.log('Finder web service run at port 3000');
+app.set('port', (process.env.PORT || 5000));
+app.listen(app.get('port'), function () {
+    console.log('Finder web service run at port ' + app.get('port'));
 });
 
 
