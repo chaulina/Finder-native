@@ -17,7 +17,8 @@
             <li>GET: getChatList?session=[session]&amp;targetEmail=[targetEmail]</li>
             <li>POST: changeProfilePicture?session=[session]&profilePicture=[profilePictureMultipart]</li>
         </ul>
-        <h1>Upload Picture Tester</h1>
+
+        <h1>Change Profile Tester</h1>
         <input id="email" placeholder="email" />
         <input id="password" placeholder="password" />
         <button id="login">Login By Email and Get Session</button>
@@ -28,13 +29,76 @@
             <button>Upload</button>
         </form>
 
+        <h1>Current data</h1>
+
+        <h2>Users</h2>
+        <table border="1">
+            <tr>
+                <th>email</th>
+                <th>name</th>
+                <th>password</th>
+                <th>session</th>
+                <th>lon</th>
+                <th>lat</th>
+                <th>profile_picture</th>
+            </tr>
+            <% for(var i=0; i<userRows.length; i++){ var row = userRows[i]; %>
+                <tr>
+                    <td><%= row.email %></td>
+                    <td><%= row.name %></td>
+                    <td><%= row.password %></td>
+                    <td><%= row.session %></td>
+                    <td><%= row.lon %></td>
+                    <td><%= row.lat %></td>
+                    <td>
+                        <% if(row.profile_picture != ''){ %>
+                        <img width = "100px" src="public/uploads/<%= row.profile_picture %>" /> 
+                        <% } else{ %>
+                            NO PROFILE PICTURE
+                        <% } %>
+                    </td>
+                </tr>
+            <% } %>
+        </table>
+
+        <h2>Matches</h2>
+        <table border="1">
+            <tr>
+                <th>email_from</th>
+                <th>email_to</th>
+            </tr>
+            <% for(var i=0; i<matchRows.length; i++){ var row = matchRows[i]; %>
+                <tr>
+                    <td><%= row.email_from %></td>
+                    <td><%= row.email_to %></td>
+                </tr>
+            <% } %>
+        </table>
+
+        <h2>Chats</h2>
+        <table border="1">
+            <tr>
+                <th>email_from</th>
+                <th>email_to</th>
+                <th>message</th>
+                <th>time</th>
+            </tr>
+            <% for(var i=0; i<chatRows.length; i++){ var row = chatRows[i]; %>
+                <tr>
+                    <td><%= row.email_from %></td>
+                    <td><%= row.email_to %></td>
+                    <td><%= row.message %></td>
+                    <td><%= row.time %></td>
+                </tr>
+            <% } %>
+        </table>
 
     </body>
-    <script src="jquery-3.1.1.min.js"></script>
+    <script src="public/jquery-3.1.1.min.js"></script>
     <script>
         $('#login').click(function(){
             $.ajax({
-                'url' : 'http://localhost:3000/loginByEmail',
+                'url' : 'loginByEmail',
                 'data' : {
                     'email' : $('#email').val(), 
                     'password' : $('#password').val()

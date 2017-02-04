@@ -422,7 +422,7 @@ function getUser(db, identity, callbackSuccess, callbackError){
  */
 function updateSession(db, identity, callbackSuccess, callbackError){
     callbackGetUser = function (db, userRow){
-        var session = Math.round(Math.random()*10000);
+        var session = userRow.email + '_' + Math.round(Math.random()*10000);
         var sql = "UPDATE user SET session = ? WHERE email = ? OR session = ?";
         var params = [session, identity, identity];
         db.run(sql, params);
