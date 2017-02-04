@@ -33,9 +33,24 @@ io.on('connection', function(){ /* … */ });
 
 app.use('/public', express.static('public'));
 app.use(fileUpload());
+app.engine('html', require('ejs').renderFile);
 
 app.get('/', function (req, res) {
-    res.sendFile(__dirname+'/views/index.html');
+    runDb(null, function(db){
+        userRows = [];
+        matchRows = [];
+        chatRows = [];
+        db.all("SELECT * FROM user", function(err, rows){
+            userRows = rows;
+            db.all("SELECT * FROM match", function(err, rows){
+                matchRows = rows;
+                db.all("SELECT * FROM chat", function(err, rows){
+                    chatRows = rows;
+                    res.render(__dirname+'/views/index.html', {"userRows":userRows,"chatRows":chatRows,"matchRows":matchRows});
+                });
+            });
+        });
+    }, function(){});
 });
 
 app.get('/register', function (req, res){

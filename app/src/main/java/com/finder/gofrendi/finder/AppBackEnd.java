@@ -38,6 +38,36 @@ class AppBackEnd extends SQLiteOpenHelper {
         return this.errorMessage;
     }
 
+    public boolean register(String email, String name, String password){
+        RequestHelper rh = new RequestHelper();
+        rh.urlAddress = this.protocol + "://" + this.server + "/register";
+        rh.method = "GET";
+        rh.requestParams = new HashMap<String, String>();
+        rh.requestParams.put("email", email);
+        rh.requestParams.put("name", name);
+        rh.requestParams.put("password", password);
+        try {
+            String result = rh.execute().get();
+            Log.d("my.ac.loginByEmail", result);
+            if (result != "") {
+                JSONObject json = new JSONObject(result);
+                if (json.getBoolean("success")) {
+                    // loginBySession succeed
+                    this.session = json.getString("session");
+                    this.save();
+                    return true;
+                } else {
+                    this.errorMessage = json.getString("errorMessage");
+                }
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
     public boolean loginBySession(){
         RequestHelper rh = new RequestHelper();
         rh.urlAddress = this.protocol + "://" + this.server + "/loginBySession";
@@ -98,8 +128,93 @@ class AppBackEnd extends SQLiteOpenHelper {
         this.save();
     }
 
-    public void register(String email, String name, String password) {
+    public boolean move(double lat, double lon)
+    {
+        RequestHelper rh = new RequestHelper();
+        rh.urlAddress = this.protocol + "://" + this.server + "/move";
+        rh.method = "GET";
+        rh.requestParams = new HashMap<String, String>();
+        rh.requestParams.put("session", this.session);
+        rh.requestParams.put("newLat", String.valueOf(lat));
+        rh.requestParams.put("newLon", String.valueOf(lon));
+        try {
+            String result = rh.execute().get();
+            Log.d("my.ac.loginByEmail", result);
+            if (result != "") {
+                JSONObject json = new JSONObject(result);
+                if (json.getBoolean("success")) {
+                    // loginBySession succeed
+                    this.session = json.getString("session");
+                    this.save();
+                    return true;
+                } else {
+                    this.errorMessage = json.getString("errorMessage");
+                }
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return false;
+    }
 
+    public boolean swipeRight(String targetEmail)
+    {
+        RequestHelper rh = new RequestHelper();
+        rh.urlAddress = this.protocol + "://" + this.server + "/swipeRight";
+        rh.method = "GET";
+        rh.requestParams = new HashMap<String, String>();
+        rh.requestParams.put("session", this.session);
+        rh.requestParams.put("targetEmail", targetEmail);
+        try {
+            String result = rh.execute().get();
+            Log.d("my.ac.loginByEmail", result);
+            if (result != "") {
+                JSONObject json = new JSONObject(result);
+                if (json.getBoolean("success")) {
+                    // loginBySession succeed
+                    this.session = json.getString("session");
+                    this.save();
+                    return true;
+                } else {
+                    this.errorMessage = json.getString("errorMessage");
+                }
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean chat(String targetEmail, String message)
+    {
+        RequestHelper rh = new RequestHelper();
+        rh.urlAddress = this.protocol + "://" + this.server + "/chat";
+        rh.method = "GET";
+        rh.requestParams = new HashMap<String, String>();
+        rh.requestParams.put("session", this.session);
+        rh.requestParams.put("targetEmail", targetEmail);
+        rh.requestParams.put("message", message);
+        try {
+            String result = rh.execute().get();
+            Log.d("my.ac.loginByEmail", result);
+            if (result != "") {
+                JSONObject json = new JSONObject(result);
+                if (json.getBoolean("success")) {
+                    // loginBySession succeed
+                    this.session = json.getString("session");
+                    this.save();
+                    return true;
+                } else {
+                    this.errorMessage = json.getString("errorMessage");
+                }
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public void save() {

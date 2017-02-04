@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     AppBackEnd config;
@@ -77,11 +78,17 @@ public class MainActivity extends AppCompatActivity {
         // logged in by session
         config = new AppBackEnd(this);
         boolean loggedIn = config.loginBySession();
+        if(!loggedIn){
+            Toast toast = Toast.makeText(this, intent.getStringExtra("server"), Toast.LENGTH_SHORT);
+            toast.show();
+        }
         Log.d("my.logInBySession", String.valueOf(loggedIn));
 
+        /*
         config = new AppBackEnd(this);
         loggedIn =config.loginByEmail("test@test.com", "test");
         Log.d("my.logInByEmail", String.valueOf(loggedIn));
+        */
     }
 
     public void buttonSettingClick(View view) {

@@ -18,8 +18,10 @@ public class SettingActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         Intent intent = getIntent();
-        Toast toast = Toast.makeText(this, intent.getStringExtra("server"), Toast.LENGTH_SHORT);
-        toast.show();
+        String server = intent.getStringExtra("server");
+        String protocol = intent.getStringExtra("protocol");
+        String session = intent.getStringExtra("session");
+        String radius = intent.getStringExtra("radius");
     }
 
 }
