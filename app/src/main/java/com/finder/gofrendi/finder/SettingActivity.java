@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 public class SettingActivity extends AppCompatActivity {
-    AppConfig config;
+    AppBackEnd config;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

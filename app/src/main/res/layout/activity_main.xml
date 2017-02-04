@@ -26,6 +26,20 @@
         android:id="@+id/buttonLogin" />
 
     <Button
+        android:text="Register"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="buttonRegisterClick"
+        android:id="@+id/buttonRegister" />
+
+    <Button
+        android:text="Logout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="buttonLogoutClick"
+        android:id="@+id/buttonLogout" />
+
+    <Button
         android:text="Update Profile Picture"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
