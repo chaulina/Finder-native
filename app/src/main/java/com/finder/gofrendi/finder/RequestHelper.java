@@ -72,16 +72,32 @@ public class RequestHelper extends AsyncTask<String, Integer, String> {
                 // data stream
                 DataOutputStream dos = null;
                 dos = new DataOutputStream(con.getOutputStream());
+                // get size of requestParams + size of requestFiles
+                int totalFieldCount = this.requestParams.size() + this.fileParams.size();
+                int fieldCount = 0;
+                Log.d("my.rh.fieldCount", String.valueOf(fieldCount));
+                Log.d("my.rh.totalField", String.valueOf(totalFieldCount));
+                if(totalFieldCount > 0){
+                    dos.writeBytes(twoHyphens + boundary + lineEnd);
+                }
                 // post parameters
                 for (Map.Entry<String, String> entry : this.requestParams.entrySet()) {
                     String key = entry.getKey();
                     String val = entry.getValue();
-                    dos.writeBytes(twoHyphens + boundary + lineEnd);
-                    dos.writeBytes("Content-Disposition: form-data; name=\"" + key + "\";" + lineEnd);
+                    dos.writeBytes("Content-Disposition: form-data; name=\"" + key + "\"" + lineEnd);
                     dos.writeBytes(lineEnd);
                     dos.writeBytes(val);
                     dos.writeBytes(lineEnd);
-                    dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
+                    // create field closer
+                    fieldCount++;
+                    if(fieldCount == totalFieldCount) {
+                        dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
+                        Log.d("my.rh", "penutup");
+                    }
+                    else{
+                        dos.writeBytes(twoHyphens + boundary + lineEnd);
+                        Log.d("my.rh", "batas");
+                    }
                 }
                 // file parameters
                 for (Map.Entry<String, String> entry : this.fileParams.entrySet()) {
@@ -90,8 +106,7 @@ public class RequestHelper extends AsyncTask<String, Integer, String> {
                     FileInputStream fileInputStream = new FileInputStream(new File(String.valueOf(
                             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES + "/Finder/" + val))
                     ));
-                    dos.writeBytes(twoHyphens + boundary + lineEnd);
-                    dos.writeBytes("Content-Disposition: form-data; name=\"" + key + "\";filename=\"" + val + "\"" + lineEnd);
+                    dos.writeBytes("Content-Disposition: form-data; name=\"" + key + "\"; filename=\"" + val + "\"" + lineEnd);
                     dos.writeBytes("Content-Type: image/jpeg" + lineEnd);
                     dos.writeBytes(lineEnd);
                     // create a buffer of maximum size
@@ -108,7 +123,16 @@ public class RequestHelper extends AsyncTask<String, Integer, String> {
                     }
                     // send multipart form data necessary after file data...
                     dos.writeBytes(lineEnd);
-                    dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
+                    // create field closer
+                    fieldCount++;
+                    if(fieldCount == totalFieldCount) {
+                        dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
+                        Log.d("my.rh", "penutup");
+                    }
+                    else{
+                        dos.writeBytes(twoHyphens + boundary + lineEnd);
+                        Log.d("my.rh", "batas");
+                    }
                     // close streams
                     Log.d("my.rh", "File is written");
                     fileInputStream.close();

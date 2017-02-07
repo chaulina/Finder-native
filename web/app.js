@@ -85,8 +85,8 @@ app.get('/loginByEmail', function(req, res){
 
 app.get('/move', function(req, res){
     session = req.query.session;
-    newLat = req.query.lat;
-    newLon = req.query.Lon;
+    newLat = req.query.newLat;
+    newLon = req.query.newLon;
     callbackSuccess = function(db, userRow){
         object = {session:userRow.session};
         successResponse(res)(object);

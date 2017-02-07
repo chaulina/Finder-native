@@ -19,6 +19,8 @@ public class MainActivity extends AppCompatActivity {
     public double lon = 0;
     public double lat = 0;
 
+    private MainActivity self;
+
     /**
      * GPS_Listener
      */
@@ -28,6 +30,10 @@ public class MainActivity extends AppCompatActivity {
         public void onLocationChanged(Location loc) {
             lon = loc.getLongitude();
             lat = loc.getLatitude();
+            Log.d("location.lat", String.valueOf(lat));
+            Log.d("location.lon", String.valueOf(lon));
+            backEnd = new AppBackEnd(self);
+            backEnd.move(lat,lon);
         }
 
         @Override
@@ -46,24 +52,22 @@ public class MainActivity extends AppCompatActivity {
     public void updateLocation() {
         LocationManager locationManager = (LocationManager)
                 getSystemService(Context.LOCATION_SERVICE);
+        Log.d("location", "start");
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+            Log.d("location", "failed");
             return;
         }
+        Log.d("location", "askForUpdate");
         locationManager.requestLocationUpdates(
-                LocationManager.GPS_PROVIDER, 5000, 10, new GPS_Listener());
+                LocationManager.GPS_PROVIDER, 5000, 1, new GPS_Listener());
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        self = this;
     }
 
     @Override
@@ -87,6 +91,8 @@ public class MainActivity extends AppCompatActivity {
         backEnd = new AppBackEnd(this);
         loggedIn =backEnd.loginByEmail("test@test.com", "test");
         Log.d("my.logInByEmail", String.valueOf(loggedIn));
+
+        updateLocation();
     }
 
     public void buttonSettingClick(View view) {
