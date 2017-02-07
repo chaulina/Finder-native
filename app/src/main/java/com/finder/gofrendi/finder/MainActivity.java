@@ -15,7 +15,7 @@ import android.view.View;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
-    AppBackEnd config;
+    AppBackEnd backEnd;
     public double lon = 0;
     public double lat = 0;
 
@@ -76,45 +76,43 @@ public class MainActivity extends AppCompatActivity {
         String radius = intent.getStringExtra("radius");
 
         // logged in by session
-        config = new AppBackEnd(this);
-        boolean loggedIn = config.loginBySession();
+        backEnd = new AppBackEnd(this);
+        boolean loggedIn = backEnd.loginBySession();
         if(!loggedIn){
             Toast toast = Toast.makeText(this, intent.getStringExtra("server"), Toast.LENGTH_SHORT);
             toast.show();
         }
         Log.d("my.logInBySession", String.valueOf(loggedIn));
 
-        /*
-        config = new AppBackEnd(this);
-        loggedIn =config.loginByEmail("test@test.com", "test");
+        backEnd = new AppBackEnd(this);
+        loggedIn =backEnd.loginByEmail("test@test.com", "test");
         Log.d("my.logInByEmail", String.valueOf(loggedIn));
-        */
     }
 
     public void buttonSettingClick(View view) {
         Intent intent = new Intent(this, SettingActivity.class);
-        intent.putExtra("protocol", this.config.protocol);
-        intent.putExtra("server", this.config.server);
-        intent.putExtra("session", this.config.session);
-        intent.putExtra("radius", this.config.radius);
+        intent.putExtra("protocol", this.backEnd.protocol);
+        intent.putExtra("server", this.backEnd.server);
+        intent.putExtra("session", this.backEnd.session);
+        intent.putExtra("radius", this.backEnd.radius);
         startActivity(intent);
     }
 
     public void buttonLoginClick(View view) {
         Intent intent = new Intent(this, LoginActivity.class);
-        intent.putExtra("protocol", this.config.protocol);
-        intent.putExtra("server", this.config.server);
-        intent.putExtra("session", this.config.session);
-        intent.putExtra("radius", this.config.radius);
+        intent.putExtra("protocol", this.backEnd.protocol);
+        intent.putExtra("server", this.backEnd.server);
+        intent.putExtra("session", this.backEnd.session);
+        intent.putExtra("radius", this.backEnd.radius);
         startActivity(intent);
     }
 
     public void buttonRegisterClick(View view) {
         Intent intent = new Intent(this, RegisterActivity.class);
-        intent.putExtra("protocol", this.config.protocol);
-        intent.putExtra("server", this.config.server);
-        intent.putExtra("session", this.config.session);
-        intent.putExtra("radius", this.config.radius);
+        intent.putExtra("protocol", this.backEnd.protocol);
+        intent.putExtra("server", this.backEnd.server);
+        intent.putExtra("session", this.backEnd.session);
+        intent.putExtra("radius", this.backEnd.radius);
         startActivity(intent);
     }
 
@@ -124,28 +122,28 @@ public class MainActivity extends AppCompatActivity {
 
     public void buttonUpdateProfilePictureClick(View view) {
         Intent intent = new Intent(this, UpdateProfilePictureActivity.class);
-        intent.putExtra("protocol", this.config.protocol);
-        intent.putExtra("server", this.config.server);
-        intent.putExtra("session", this.config.session);
-        intent.putExtra("radius", this.config.radius);
+        intent.putExtra("protocol", this.backEnd.protocol);
+        intent.putExtra("server", this.backEnd.server);
+        intent.putExtra("session", this.backEnd.session);
+        intent.putExtra("radius", this.backEnd.radius);
         startActivity(intent);
     }
 
     public void buttonDiscoverClick(View view) {
         Intent intent = new Intent(this, DiscoverActivity.class);
-        intent.putExtra("protocol", this.config.protocol);
-        intent.putExtra("server", this.config.server);
-        intent.putExtra("session", this.config.session);
-        intent.putExtra("radius", this.config.radius);
+        intent.putExtra("protocol", this.backEnd.protocol);
+        intent.putExtra("server", this.backEnd.server);
+        intent.putExtra("session", this.backEnd.session);
+        intent.putExtra("radius", this.backEnd.radius);
         startActivity(intent);
     }
 
     public void buttonMatchClick(View view) {
         Intent intent = new Intent(this, MatchActivity.class);
-        intent.putExtra("protocol", this.config.protocol);
-        intent.putExtra("server", this.config.server);
-        intent.putExtra("session", this.config.session);
-        intent.putExtra("radius", this.config.radius);
+        intent.putExtra("protocol", this.backEnd.protocol);
+        intent.putExtra("server", this.backEnd.server);
+        intent.putExtra("session", this.backEnd.session);
+        intent.putExtra("radius", this.backEnd.radius);
         startActivity(intent);
     }
 }

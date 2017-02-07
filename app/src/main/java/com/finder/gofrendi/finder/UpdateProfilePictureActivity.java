@@ -20,6 +20,11 @@ import java.util.Date;
 public class UpdateProfilePictureActivity extends AppCompatActivity {
     private Camera mCamera;
     private CameraPreview mCameraPreview;
+    private UpdateProfilePictureActivity self;
+
+    String server = "";
+    String protocol = "";
+    String session = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +34,7 @@ public class UpdateProfilePictureActivity extends AppCompatActivity {
         mCameraPreview = new CameraPreview(this, mCamera);
         FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
         preview.addView(mCameraPreview);
+        self = this;
     }
 
     public void buttonCaptureClick(View v){
@@ -39,10 +45,9 @@ public class UpdateProfilePictureActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         Intent intent = getIntent();
-        String server = intent.getStringExtra("server");
-        String protocol = intent.getStringExtra("protocol");
-        String session = intent.getStringExtra("session");
-        String radius = intent.getStringExtra("radius");
+        server = intent.getStringExtra("server");
+        protocol = intent.getStringExtra("protocol");
+        session = intent.getStringExtra("session");
     }
 
     /**
@@ -75,7 +80,11 @@ public class UpdateProfilePictureActivity extends AppCompatActivity {
                 fos.write(data);
                 Log.d("my.cam", String.valueOf(fos));
                 fos.close();
-            } catch (IOException e) {
+
+                // upload
+                AppBackEnd backEnd = new AppBackEnd(self);
+                backEnd.changeProfilePicture(pictureFile.getName());
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -92,9 +101,9 @@ public class UpdateProfilePictureActivity extends AppCompatActivity {
         // Create a media file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss")
                 .format(new Date());
+        String mediaFileName = "IMG_" + timeStamp + ".jpg";
         File mediaFile;
-        mediaFile = new File(mediaStorageDir.getPath() + File.separator
-                + "IMG_" + timeStamp + ".jpg");
+        mediaFile = new File(mediaStorageDir.getPath() + File.separator + mediaFileName);
 
         return mediaFile;
     }

@@ -22,10 +22,10 @@ class AppBackEnd extends SQLiteOpenHelper {
     private String errorMessage="";
 
     public AppBackEnd(Context context) {
-        super(context, "finder-config.db", null, 1);
+        super(context, "finder-backEnd.db", null, 1);
         SQLiteDatabase db = this.getWritableDatabase();
         String[] params = new String[0];
-        Cursor res = db.rawQuery("SELECT * FROM config", params);
+        Cursor res = db.rawQuery("SELECT * FROM backEnd", params);
         res.moveToFirst();
         this.session = res.getString(0);
         this.protocol = res.getString(1);
@@ -158,6 +158,37 @@ class AppBackEnd extends SQLiteOpenHelper {
         return false;
     }
 
+    public boolean changeProfilePicture(String profilePictureFileName)
+    {
+        Log.d("my.ac.changePP", "start");
+        RequestHelper rh = new RequestHelper();
+        rh.urlAddress = this.protocol + "://" + this.server + "/changeProfilePicture";
+        rh.method = "POST";
+        rh.requestParams = new HashMap<String, String>();
+        rh.requestParams.put("session", this.session);
+        rh.fileParams = new HashMap<String, String>();
+        rh.fileParams.put("profilePicture", profilePictureFileName);
+        try {
+            String result = rh.execute().get();
+            Log.d("my.ac.changePP", result);
+            if (result != "") {
+                JSONObject json = new JSONObject(result);
+                if (json.getBoolean("success")) {
+                    // loginBySession succeed
+                    this.session = json.getString("session");
+                    this.save();
+                    return true;
+                } else {
+                    this.errorMessage = json.getString("errorMessage");
+                }
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public boolean swipeRight(String targetEmail)
     {
         RequestHelper rh = new RequestHelper();
@@ -220,17 +251,17 @@ class AppBackEnd extends SQLiteOpenHelper {
     public void save() {
         SQLiteDatabase db = this.getWritableDatabase();
         String[] params = new String[]{this.session, this.protocol, this.server, String.valueOf(this.radius)};
-        db.execSQL("UPDATE config SET session=?, protocol=?, server=?, radius=?", params);
+        db.execSQL("UPDATE backEnd SET session=?, protocol=?, server=?, radius=?", params);
     }
 
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE IF NOT EXISTS config(session TEXT, protocol TEXT, server TEXT, radius DOUBLE);");
+        db.execSQL("CREATE TABLE IF NOT EXISTS backEnd(session TEXT, protocol TEXT, server TEXT, radius DOUBLE);");
         String[] params = new String[0];
-        Cursor res = db.rawQuery("SELECT * FROM config", params);
+        Cursor res = db.rawQuery("SELECT * FROM backEnd", params);
         if(res.getCount() == 0) {
-            params = new String[]{"", "http", "evening-wildwood-74519.herokuapp.com", "10"};
+            params = new String[]{"test@test.com_2623", "http", "evening-wildwood-74519.herokuapp.com", "10"};
             //params = new String[]{"", "http", "10.0.2.2:3000", "10"};
-            db.execSQL("INSERT INTO config(session, protocol, server, radius) VALUES(?, ?, ?, ?)", params);
+            db.execSQL("INSERT INTO backEnd(session, protocol, server, radius) VALUES(?, ?, ?, ?)", params);
         }
         res.close();
     }

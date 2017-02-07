@@ -95,6 +95,7 @@ app.get('/move', function(req, res){
 });
 
 app.post('/changeProfilePicture', function(req, res){
+    console.log(req);
     session = req.body.session;
     file = req.files.profilePicture;
     file.mv(__dirname+'/public/uploads/'+file.name, function(err){
