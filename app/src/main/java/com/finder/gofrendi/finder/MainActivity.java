@@ -4,15 +4,27 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
     AppBackEnd backEnd;
@@ -49,6 +61,31 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+
+        public DownloadImageTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            bmImage.setImageBitmap(result);
+        }
+    }
+
     public void updateLocation() {
         LocationManager locationManager = (LocationManager)
                 getSystemService(Context.LOCATION_SERVICE);
@@ -70,24 +107,55 @@ public class MainActivity extends AppCompatActivity {
         self = this;
     }
 
+    private void changeState() {
+        ImageView imageViewMainPP = (ImageView) findViewById(R.id.imageView_main_pp);
+        TextView textViewMainName = (TextView) findViewById(R.id.textView_main_name);
+        Button buttonShowSetting = (Button) findViewById(R.id.button_show_setting);
+        Button buttonShowLogin = (Button) findViewById(R.id.button_show_login);
+        Button buttonShowRegister = (Button) findViewById(R.id.button_show_register);
+        Button buttonLogout = (Button) findViewById(R.id.button_logout);
+        Button buttonShowUpdateProfilePicture = (Button) findViewById(R.id.button_show_update_profile_picture);
+        Button buttonShowDiscover = (Button) findViewById(R.id.button_show_discover);
+        Button buttonShowMatch = (Button) findViewById(R.id.button_show_match);
+
+        boolean loginState;
+        backEnd = new AppBackEnd(this);
+        if(!backEnd.loginBySession()){
+            Toast toast = Toast.makeText(this, backEnd.getErrorMessage(), Toast.LENGTH_SHORT);
+            toast.show();
+            textViewMainName.setText("");
+            imageViewMainPP.setImageResource(R.mipmap.ic_launcher);
+            loginState = false;
+        }
+        else {
+            textViewMainName.setText(backEnd.getCurrentUserName() + " " + backEnd.getCurrentUserEmail());
+            try {
+                new DownloadImageTask(imageViewMainPP).execute(backEnd.protocol + "://" + backEnd.server + "/public/uploads/" + backEnd.getCurrentUserProfilePicture());
+                /*
+                URL ppUrl = new URL(backEnd.protocol + "://" + backEnd.server + "/public/uploads/" + backEnd.getCurrentUserProfilePicture());
+                InputStream content = (InputStream) ppUrl.getContent();
+                Drawable d = Drawable.createFromStream(content, "src");
+                imageViewMainPP.setImageDrawable(d);
+                Log.d("my.pp", String.valueOf(ppUrl));
+                */
+            } catch(Exception e){
+                Log.d("my.pp", e.getMessage());
+            }
+            loginState = true;
+        }
+        buttonShowSetting.setEnabled(true);
+        buttonShowLogin.setEnabled(!loginState);
+        buttonShowRegister.setEnabled(!loginState);
+        buttonLogout.setEnabled(loginState);
+        buttonShowUpdateProfilePicture.setEnabled(loginState);
+        buttonShowDiscover.setEnabled(loginState);
+        buttonShowMatch.setEnabled(loginState);
+    }
+
     @Override
     protected void onStart(){
         super.onStart();
-        Intent intent = getIntent();
-        String server = intent.getStringExtra("server");
-        String protocol = intent.getStringExtra("protocol");
-        String session = intent.getStringExtra("session");
-        String radius = intent.getStringExtra("radius");
-
-        // logged in by session
-        backEnd = new AppBackEnd(this);
-        boolean loggedIn = backEnd.loginBySession();
-        if(!loggedIn){
-            Toast toast = Toast.makeText(this, intent.getStringExtra("server"), Toast.LENGTH_SHORT);
-            toast.show();
-        }
-        Log.d("my.logInBySession", String.valueOf(loggedIn));
-
+        changeState();
         updateLocation();
     }
 
@@ -118,8 +186,10 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void buttonShowLogoutClick(View view) {
-
+    public void buttonLogoutClick(View view) {
+        backEnd = new AppBackEnd(this);
+        backEnd.logout();
+        changeState();
     }
 
     public void buttonShowUpdateProfilePictureClick(View view) {

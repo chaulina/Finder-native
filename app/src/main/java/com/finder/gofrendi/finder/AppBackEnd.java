@@ -21,6 +21,10 @@ class AppBackEnd extends SQLiteOpenHelper {
     public String server;
     public String session;
 
+    private String currentUserName;
+    private String currentUserEmail;
+    private String currentUserProfilePicture;
+
     private String errorMessage="";
 
     public AppBackEnd(Context context) {
@@ -34,6 +38,18 @@ class AppBackEnd extends SQLiteOpenHelper {
         this.server = res.getString(2);
         this.radius = res.getDouble(3);
         res.close();
+    }
+
+    public String getCurrentUserName() {
+        return this.currentUserName;
+    }
+
+    public String getCurrentUserEmail() {
+        return this.currentUserEmail;
+    }
+
+    public String getCurrentUserProfilePicture() {
+        return this.currentUserProfilePicture;
     }
 
     public String getErrorMessage(){
@@ -82,6 +98,11 @@ class AppBackEnd extends SQLiteOpenHelper {
                     // loginBySession succeed
                     this.session = json.getString("session");
                     this.save();
+                    // get current user into
+                    JSONObject currentUser =json.getJSONObject("user");
+                    this.currentUserName = currentUser.getString("name");
+                    this.currentUserEmail = currentUser.getString("email");
+                    this.currentUserProfilePicture = currentUser.getString("profile_picture");
                     return true;
                 } else {
                     this.errorMessage = json.getString("errorMessage");
@@ -109,6 +130,11 @@ class AppBackEnd extends SQLiteOpenHelper {
                     // loginBySession succeed
                     this.session = json.getString("session");
                     this.save();
+                    // get current user info
+                    JSONObject currentUser =json.getJSONObject("user");
+                    this.currentUserName = currentUser.getString("name");
+                    this.currentUserEmail = currentUser.getString("email");
+                    this.currentUserProfilePicture = currentUser.getString("profile_picture");
                     return true;
                 } else {
                     this.errorMessage = json.getString("errorMessage");
@@ -124,6 +150,9 @@ class AppBackEnd extends SQLiteOpenHelper {
     public void logout() {
         this.session = "";
         this.save();
+        this.currentUserName = "";
+        this.currentUserEmail = "";
+        this.currentUserProfilePicture = "";
     }
 
     public boolean move(double lat, double lon) {
