@@ -67,7 +67,7 @@ app.get('/register', function (req, res){
 app.get('/loginBySession', function(req, res){
     session = req.query.session;
     callbackSuccess = function(db, userRow){
-        object = {session:userRow.session};
+        object = {session:userRow.session, user:userRow};
         successResponse(res)(object);
     }
     loginBySession(null, session, callbackSuccess, errorResponse(res));
@@ -77,7 +77,7 @@ app.get('/loginByEmail', function(req, res){
     email = req.query.email;
     password = req.query.password;
     callbackSuccess = function(db, userRow){
-        object = {session:userRow.session};
+        object = {session:userRow.session, user:userRow};
         successResponse(res)(object);
     }
     loginByEmail(null, email, password, callbackSuccess, errorResponse(res));
