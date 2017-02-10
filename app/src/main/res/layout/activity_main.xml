@@ -15,48 +15,48 @@
         android:text="Setting"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="buttonSettingClick"
-        android:id="@+id/button_setting" />
+        android:onClick="buttonShowSettingClick"
+        android:id="@+id/button_show_setting" />
 
     <Button
         android:text="Login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="buttonLoginClick"
-        android:id="@+id/button_login" />
+        android:onClick="buttonShowLoginClick"
+        android:id="@+id/button_show_login" />
 
     <Button
         android:text="Register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="buttonRegisterClick"
-        android:id="@+id/button_register" />
+        android:onClick="buttonShowRegisterClick"
+        android:id="@+id/button_show_register" />
 
     <Button
         android:text="Logout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="buttonLogoutClick"
-        android:id="@+id/button_logout" />
+        android:onClick="buttonShowLogoutClick"
+        android:id="@+id/button_show_logout" />
 
     <Button
         android:text="Update Profile Picture"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="buttonUpdateProfilePictureClick"
-        android:id="@+id/button_update_profile_picture" />
+        android:onClick="buttonShowUpdateProfilePictureClick"
+        android:id="@+id/button_show_update_profile_picture" />
 
     <Button
         android:text="Discover"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="buttonDiscoverClick"
-        android:id="@+id/button_discover" />
+        android:onClick="buttonShowDiscoverClick"
+        android:id="@+id/button_show_discover" />
 
     <Button
         android:text="Match"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="buttonMatchClick"
-        android:id="@+id/button_match" />
+        android:onClick="buttonShowMatchClick"
+        android:id="@+id/button_show_match" />
 </LinearLayout>

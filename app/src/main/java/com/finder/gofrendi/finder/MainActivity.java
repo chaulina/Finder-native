@@ -88,14 +88,10 @@ public class MainActivity extends AppCompatActivity {
         }
         Log.d("my.logInBySession", String.valueOf(loggedIn));
 
-        backEnd = new AppBackEnd(this);
-        loggedIn =backEnd.loginByEmail("test@test.com", "test");
-        Log.d("my.logInByEmail", String.valueOf(loggedIn));
-
         updateLocation();
     }
 
-    public void buttonSettingClick(View view) {
+    public void buttonShowSettingClick(View view) {
         Intent intent = new Intent(this, SettingActivity.class);
         intent.putExtra("protocol", this.backEnd.protocol);
         intent.putExtra("server", this.backEnd.server);
@@ -104,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void buttonLoginClick(View view) {
+    public void buttonShowLoginClick(View view) {
         Intent intent = new Intent(this, LoginActivity.class);
         intent.putExtra("protocol", this.backEnd.protocol);
         intent.putExtra("server", this.backEnd.server);
@@ -113,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void buttonRegisterClick(View view) {
+    public void buttonShowRegisterClick(View view) {
         Intent intent = new Intent(this, RegisterActivity.class);
         intent.putExtra("protocol", this.backEnd.protocol);
         intent.putExtra("server", this.backEnd.server);
@@ -122,11 +118,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void buttonLogoutClick(View view) {
+    public void buttonShowLogoutClick(View view) {
 
     }
 
-    public void buttonUpdateProfilePictureClick(View view) {
+    public void buttonShowUpdateProfilePictureClick(View view) {
         Intent intent = new Intent(this, UpdateProfilePictureActivity.class);
         intent.putExtra("protocol", this.backEnd.protocol);
         intent.putExtra("server", this.backEnd.server);
@@ -135,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void buttonDiscoverClick(View view) {
+    public void buttonShowDiscoverClick(View view) {
         Intent intent = new Intent(this, DiscoverActivity.class);
         intent.putExtra("protocol", this.backEnd.protocol);
         intent.putExtra("server", this.backEnd.server);
@@ -144,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void buttonMatchClick(View view) {
+    public void buttonShowMatchClick(View view) {
         Intent intent = new Intent(this, MatchActivity.class);
         intent.putExtra("protocol", this.backEnd.protocol);
         intent.putExtra("server", this.backEnd.server);
@@ -152,4 +148,5 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("radius", this.backEnd.radius);
         startActivity(intent);
     }
+
 }

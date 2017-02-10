@@ -26,6 +26,12 @@ public class RequestHelper extends AsyncTask<String, Integer, String> {
     HashMap<String, String> requestParams;
     HashMap<String, String> fileParams;
 
+    public RequestHelper(){
+        super();
+        this.requestParams = new HashMap<String, String>();
+        this.fileParams = new HashMap<String, String>();
+    }
+
     // function to handle POST and FILES
     protected String doInBackground(String... params) {
         // response

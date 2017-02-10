@@ -11,4 +11,37 @@
     android:orientation="vertical"
     tools:context="com.finder.gofrendi.finder.LoginActivity">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:id="@+id/TextView_login_email"
+        tools:text="Email" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:ems="10"
+        android:id="@+id/editText_login_email" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:id="@+id/TextView_login_password"
+        tools:text="Password" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:id="@+id/editText_login_password" />
+
+    <Button
+        android:text="Login"
+        android:onClick="onButtonLoginClick"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/button_login" />
+
 </LinearLayout>

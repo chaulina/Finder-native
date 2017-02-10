@@ -9,6 +9,31 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
-    tools:context="com.finder.gofrendi.finder.ChatActivity">
+    tools:context="com.finder.gofrendi.finder.ChatActivity"
+    android:gravity="bottom">
 
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="341dp" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:inputType="textMultiLine"
+            android:ems="10"
+            android:id="@+id/editText_chat_message"
+            android:layout_weight="0.06" />
+
+        <Button
+            android:text="Send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_chat_send"
+            android:layout_weight="0.06" />
+    </LinearLayout>
 </LinearLayout>

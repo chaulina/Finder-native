@@ -5,6 +5,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
+import org.json.JSONArray;
 import org.json.JSONObject;
 import java.util.HashMap;
 
@@ -38,11 +40,10 @@ class AppBackEnd extends SQLiteOpenHelper {
         return this.errorMessage;
     }
 
-    public boolean register(String email, String name, String password){
+    public boolean register(String email, String name, String password) {
         RequestHelper rh = new RequestHelper();
         rh.urlAddress = this.protocol + "://" + this.server + "/register";
         rh.method = "GET";
-        rh.requestParams = new HashMap<String, String>();
         rh.requestParams.put("email", email);
         rh.requestParams.put("name", name);
         rh.requestParams.put("password", password);
@@ -67,12 +68,10 @@ class AppBackEnd extends SQLiteOpenHelper {
         return false;
     }
 
-
-    public boolean loginBySession(){
+    public boolean loginBySession() {
         RequestHelper rh = new RequestHelper();
         rh.urlAddress = this.protocol + "://" + this.server + "/loginBySession";
         rh.method = "GET";
-        rh.requestParams = new HashMap<String, String>();
         rh.requestParams.put("session", this.session);
         try {
             String result = rh.execute().get();
@@ -95,11 +94,10 @@ class AppBackEnd extends SQLiteOpenHelper {
         return false;
     }
 
-    public boolean loginByEmail(String email, String password){
+    public boolean loginByEmail(String email, String password) {
         RequestHelper rh = new RequestHelper();
         rh.urlAddress = this.protocol + "://" + this.server + "/loginByEmail";
         rh.method = "GET";
-        rh.requestParams = new HashMap<String, String>();
         rh.requestParams.put("email", email);
         rh.requestParams.put("password", password);
         try {
@@ -128,12 +126,10 @@ class AppBackEnd extends SQLiteOpenHelper {
         this.save();
     }
 
-    public boolean move(double lat, double lon)
-    {
+    public boolean move(double lat, double lon) {
         RequestHelper rh = new RequestHelper();
         rh.urlAddress = this.protocol + "://" + this.server + "/move";
         rh.method = "GET";
-        rh.requestParams = new HashMap<String, String>();
         rh.requestParams.put("session", this.session);
         rh.requestParams.put("newLat", String.valueOf(lat));
         rh.requestParams.put("newLon", String.valueOf(lon));
@@ -158,15 +154,12 @@ class AppBackEnd extends SQLiteOpenHelper {
         return false;
     }
 
-    public boolean changeProfilePicture(String profilePictureFileName)
-    {
+    public boolean changeProfilePicture(String profilePictureFileName) {
         Log.d("my.ac.changePP", "start");
         RequestHelper rh = new RequestHelper();
         rh.urlAddress = this.protocol + "://" + this.server + "/changeProfilePicture";
         rh.method = "POST";
-        rh.requestParams = new HashMap<String, String>();
         rh.requestParams.put("session", this.session);
-        rh.fileParams = new HashMap<String, String>();
         rh.fileParams.put("profilePicture", profilePictureFileName);
         try {
             String result = rh.execute().get();
@@ -189,17 +182,15 @@ class AppBackEnd extends SQLiteOpenHelper {
         return false;
     }
 
-    public boolean swipeRight(String targetEmail)
-    {
+    public boolean swipeRight(String targetEmail) {
         RequestHelper rh = new RequestHelper();
         rh.urlAddress = this.protocol + "://" + this.server + "/swipeRight";
         rh.method = "GET";
-        rh.requestParams = new HashMap<String, String>();
         rh.requestParams.put("session", this.session);
         rh.requestParams.put("targetEmail", targetEmail);
         try {
             String result = rh.execute().get();
-            Log.d("my.ac.loginByEmail", result);
+            Log.d("my.ac.swipRight", result);
             if (result != "") {
                 JSONObject json = new JSONObject(result);
                 if (json.getBoolean("success")) {
@@ -218,18 +209,16 @@ class AppBackEnd extends SQLiteOpenHelper {
         return false;
     }
 
-    public boolean chat(String targetEmail, String message)
-    {
+    public boolean chat(String targetEmail, String message) {
         RequestHelper rh = new RequestHelper();
         rh.urlAddress = this.protocol + "://" + this.server + "/chat";
         rh.method = "GET";
-        rh.requestParams = new HashMap<String, String>();
         rh.requestParams.put("session", this.session);
         rh.requestParams.put("targetEmail", targetEmail);
         rh.requestParams.put("message", message);
         try {
             String result = rh.execute().get();
-            Log.d("my.ac.loginByEmail", result);
+            Log.d("my.ac.chat", result);
             if (result != "") {
                 JSONObject json = new JSONObject(result);
                 if (json.getBoolean("success")) {
@@ -246,6 +235,87 @@ class AppBackEnd extends SQLiteOpenHelper {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public JSONArray getAvailableUserList(double radius){
+        RequestHelper rh = new RequestHelper();
+        rh.urlAddress = this.protocol + "://" + this.server + "/getAvailableUserList";
+        rh.method = "GET";
+        rh.requestParams.put("session", this.session);
+        rh.requestParams.put("radius", String.valueOf(radius));
+        try {
+            String result = rh.execute().get();
+            Log.d("my.ac.getUserList", result);
+            if (result != "") {
+                JSONObject json = new JSONObject(result);
+                if (json.getBoolean("success")) {
+                    // loginBySession succeed
+                    this.session = json.getString("session");
+                    this.save();
+                    return json.getJSONArray("userList");
+                } else {
+                    this.errorMessage = json.getString("errorMessage");
+                }
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return new JSONArray();
+    }
+
+    public JSONArray getMatchList(String targetEmail){
+        RequestHelper rh = new RequestHelper();
+        rh.urlAddress = this.protocol + "://" + this.server + "/getMatchList";
+        rh.method = "GET";
+        rh.requestParams.put("session", this.session);
+        rh.requestParams.put("targetEmail", targetEmail);
+        try {
+            String result = rh.execute().get();
+            Log.d("my.ac.getMatchList", result);
+            if (result != "") {
+                JSONObject json = new JSONObject(result);
+                if (json.getBoolean("success")) {
+                    // loginBySession succeed
+                    this.session = json.getString("session");
+                    this.save();
+                    return json.getJSONArray("userList");
+                } else {
+                    this.errorMessage = json.getString("errorMessage");
+                }
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return new JSONArray();
+    }
+
+    public JSONArray getChatList(String targetEmail){
+        RequestHelper rh = new RequestHelper();
+        rh.urlAddress = this.protocol + "://" + this.server + "/getChatList";
+        rh.method = "GET";
+        rh.requestParams.put("session", this.session);
+        rh.requestParams.put("targetEmail", targetEmail);
+        try {
+            String result = rh.execute().get();
+            Log.d("my.ac.getMatchList", result);
+            if (result != "") {
+                JSONObject json = new JSONObject(result);
+                if (json.getBoolean("success")) {
+                    // loginBySession succeed
+                    this.session = json.getString("session");
+                    this.save();
+                    return json.getJSONArray("chatList");
+                } else {
+                    this.errorMessage = json.getString("errorMessage");
+                }
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return new JSONArray();
     }
 
     public void save() {
