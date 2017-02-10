@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:id="@+id/TextView_setting_protocol"
-        tools:text="Protocol" />
+        android:text="Protocol" />
 
     <EditText
         android:layout_width="match_parent"
@@ -28,7 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:id="@+id/TextView_setting_server"
-        tools:text="Name" />
+        android:text="Name" />
 
     <EditText
         android:layout_width="match_parent"
@@ -41,12 +41,19 @@
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:id="@+id/TextView_setting_radius"
-        tools:text="Radius" />
+        android:text="Radius" />
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="text"
         android:ems="10"
         android:id="@+id/editText_setting_radius" />
+
+    <Button
+        android:text="Save"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="buttonSettingSaveClick"
+        android:id="@+id/button_setting_save" />
 
 </LinearLayout>

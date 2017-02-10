@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:id="@+id/TextView_register_email"
-        tools:text="Email" />
+        android:text="Email" />
 
     <EditText
         android:layout_width="match_parent"
@@ -28,7 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:id="@+id/TextView_register_name"
-        tools:text="Name" />
+        android:text="Name" />
 
     <EditText
         android:layout_width="match_parent"
@@ -41,7 +41,7 @@
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:id="@+id/TextView_register_password"
-        tools:text="Password" />
+        android:text="Password" />
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
