@@ -51,7 +51,7 @@
                     <td><%= row.lon %></td>
                     <td><%= row.lat %></td>
                     <td>
-                        <% if(row.profile_picture != ''){ %>
+                        <% if(row.profile_picture != '' && row.profile_picture != null){ %>
                         <img width = "100px" src="public/uploads/<%= row.profile_picture %>" /> 
                         <% } else{ %>
                             NO PROFILE PICTURE
