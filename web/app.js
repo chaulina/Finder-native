@@ -98,7 +98,7 @@ app.post('/changeProfilePicture', function(req, res){
     console.log(req);
     session = req.body.session;
     file = req.files.profilePicture;
-    file.mv(__dirname+'/public/uploads/'+file.name, function(err){
+    file.mv(__dirname+'/public/uploads/' + session + file.name , function(err){
         // update database
         callbackSuccess = function(db, userRow){
             object = {session:userRow.session};
