@@ -104,7 +104,7 @@ app.post('/changeProfilePicture', function(req, res){
             object = {session:userRow.session};
             successResponse(res)(object);
         }
-        changeProfilePicture(null, session, file.name, callbackSuccess, errorResponse(res));
+        changeProfilePicture(null, session, session + file.name, callbackSuccess, errorResponse(res));
     });
 });
 
