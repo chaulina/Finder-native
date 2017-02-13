@@ -19,11 +19,13 @@ public class SettingActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        Intent intent = getIntent();
-        String server = intent.getStringExtra("server");
-        String protocol = intent.getStringExtra("protocol");
-        String session = intent.getStringExtra("session");
-        String radius = intent.getStringExtra("radius");
+        EditText editTextSettingProtocol = (EditText) findViewById(R.id.editText_setting_protocol);
+        EditText editTextSettingServer = (EditText) findViewById(R.id.editText_setting_server);
+        EditText editTextSettingRadius = (EditText) findViewById(R.id.editText_setting_radius);
+        AppBackEnd backEnd = new AppBackEnd(this);
+        editTextSettingProtocol.setText(backEnd.protocol);
+        editTextSettingServer.setText(backEnd.server);
+        editTextSettingRadius.setText(String.valueOf(backEnd.radius));
     }
 
     public void buttonSettingSaveClick(View view) {

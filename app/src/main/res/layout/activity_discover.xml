@@ -17,18 +17,33 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:srcCompat="@mipmap/ic_launcher"
-        android:id="@+id/image_discover"
+        android:id="@+id/imageView_discover_pp"
         android:layout_weight="0.82" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView_discover_name" />
 
     <Button
         android:text="Yes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:onClick="onButtonDiscoverYesClick"
         android:id="@+id/button_discover_yes" />
 
     <Button
         android:text="No"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:onClick="onButtonDiscoverNoClick"
         android:id="@+id/button_discover_no" />
+
+    <Button
+        android:text="Back"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onButtonDiscoverBackClick"
+        android:id="@+id/button_discover_back" />
+
 </LinearLayout>

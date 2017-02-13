@@ -7,13 +7,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.FrameLayout;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -39,6 +36,8 @@ public class UpdateProfilePictureActivity extends AppCompatActivity {
 
     public void buttonCaptureClick(View v){
         mCamera.takePicture(null, null, mPicture);
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -80,7 +79,6 @@ public class UpdateProfilePictureActivity extends AppCompatActivity {
                 fos.write(data);
                 Log.d("my.cam", String.valueOf(fos));
                 fos.close();
-
                 // upload
                 AppBackEnd backEnd = new AppBackEnd(self);
                 backEnd.changeProfilePicture(pictureFile.getName());

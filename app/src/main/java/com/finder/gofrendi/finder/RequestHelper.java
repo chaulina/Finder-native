@@ -20,13 +20,13 @@ import java.util.Map;
  * Created by gofrendi on 2/1/17.
  */
 
-public class RequestHelper extends AsyncTask<String, Integer, String> {
-    public String urlAddress;
-    public String method;
+class RequestHelper extends AsyncTask<String, Integer, String> {
+    String urlAddress;
+    String method;
     HashMap<String, String> requestParams;
     HashMap<String, String> fileParams;
 
-    public RequestHelper(){
+    RequestHelper(){
         super();
         this.requestParams = new HashMap<String, String>();
         this.fileParams = new HashMap<String, String>();
@@ -39,7 +39,7 @@ public class RequestHelper extends AsyncTask<String, Integer, String> {
         try {
             // build query
             if(this.method.equalsIgnoreCase("GET") && this.requestParams != null) {
-                String query = null;
+                String query;
                 Uri.Builder builder = new Uri.Builder();
                 for (Map.Entry<String, String> entry : this.requestParams.entrySet()) {
                     String key = entry.getKey();
@@ -72,11 +72,11 @@ public class RequestHelper extends AsyncTask<String, Integer, String> {
                 String boundary = "*****";
                 int bytesRead, bytesAvailable, bufferSize;
                 byte[] buffer;
-                int maxBufferSize = 1 * 1024 * 1024;
+                int maxBufferSize = 1024 * 1024;
                 con.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
                 con.setDoOutput(true);
                 // data stream
-                DataOutputStream dos = null;
+                DataOutputStream dos;
                 dos = new DataOutputStream(con.getOutputStream());
                 // get size of requestParams + size of requestFiles
                 int totalFieldCount = this.requestParams.size() + this.fileParams.size();
@@ -153,7 +153,7 @@ public class RequestHelper extends AsyncTask<String, Integer, String> {
             Log.d("my.rh.responseCode", String.valueOf(responseCode));
             if(responseCode == HttpURLConnection.HTTP_OK){
                 BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                StringBuffer response = new StringBuffer();
+                StringBuilder response = new StringBuilder();
                 String inputLine;
                 while((inputLine = in.readLine()) != null){
                     response.append(inputLine);

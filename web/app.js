@@ -627,7 +627,7 @@ function getAvailableUserList(db, session, radius, callbackSuccess, callbackErro
             availableUserList = []
             for(i=0; i<rows.length; i++){
                 row = rows[i];
-                // only get users that are note swiped right
+                // only get users that are not swiped right
                 var alreadyMatched = false;
                 for(j=0; j<matchList.length; j++){
                     match = matchList[j];
@@ -647,7 +647,7 @@ function getAvailableUserList(db, session, radius, callbackSuccess, callbackErro
             }
         });
     }
-    getMatchList(db, session, callbackMatchList, callbackError);
+    getSwipedList(db, session, callbackMatchList, callbackError);
 }
 
 /**
@@ -671,6 +671,29 @@ function getMatchList(db, session, callbackSuccess, callbackError){
     }
     loginBySession(db, session, callbackLoginBySession, callbackError);
 }
+
+/**
+ * Swiped List 
+ * @param {Object} db
+ * @param {String} session
+ * @param {Function} callbackSuccess(db, userRow, matchList)
+ * @param {Function} callbackError(errorMessage)
+ */
+function getSwipedList(db, session, callbackSuccess, callbackError){
+    callbackLoginBySession = function(db, currentUser){
+        var sql = "SELECT * FROM user WHERE email != ? AND (SELECT COUNT(*) FROM match WHERE email_from = ? AND email_to = user.email) > 0";
+        var params = [currentUser.email, currentUser.email];
+        db.all(sql, params, function(err, rows){
+            if(err && typeof callbackError === 'function'){
+                callbackError(err.message);
+            }else if(typeof callbackSuccess === 'function'){
+                callbackSuccess(db, currentUser, rows);
+            }
+        });
+    }
+    loginBySession(db, session, callbackLoginBySession, callbackError);
+}
+
 
 /**
  * Chat List 
