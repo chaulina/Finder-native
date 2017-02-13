@@ -47,6 +47,7 @@ public class DiscoverActivity extends AppCompatActivity {
                 JSONObject user = this.availableUserList.getJSONObject(this.userIndex);
                 AppBackEnd backEnd = new AppBackEnd(this);
                 backEnd.swipeRight(user.getString("email"));
+                this.swipedIndexList.add(this.userIndex);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
