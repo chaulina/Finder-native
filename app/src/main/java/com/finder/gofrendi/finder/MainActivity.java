@@ -147,6 +147,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void buttonShowMatchClick(View view) {
         Intent intent = new Intent(this, MatchActivity.class);
+        Log.d("my.match", "start");
         AppBackEnd backEnd = new AppBackEnd(this);
         intent.putExtra("protocol", backEnd.protocol);
         intent.putExtra("server", backEnd.server);

@@ -9,6 +9,7 @@ import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.util.HashMap;
+import java.util.Objects;
 
 /**
  * Created by gofrendi on 1/29/17.
@@ -16,14 +17,14 @@ import java.util.HashMap;
  */
 
 class AppBackEnd extends SQLiteOpenHelper {
-    public double radius;
-    public String protocol;
-    public String server;
-    public String session;
+    double radius;
+    String protocol;
+    String server;
+    String session;
 
-    private String currentUserName;
-    private String currentUserEmail;
-    private String currentUserProfilePicture;
+    static String currentUserName;
+    static String currentUserEmail;
+    static String currentUserProfilePicture;
 
     private String errorMessage="";
 
@@ -40,23 +41,23 @@ class AppBackEnd extends SQLiteOpenHelper {
         res.close();
     }
 
-    public String getCurrentUserName() {
-        return this.currentUserName;
+    String getCurrentUserName() {
+        return AppBackEnd.currentUserName;
     }
 
-    public String getCurrentUserEmail() {
-        return this.currentUserEmail;
+    String getCurrentUserEmail() {
+        return AppBackEnd.currentUserEmail;
     }
 
-    public String getCurrentUserProfilePicture() {
-        return this.currentUserProfilePicture;
+    String getCurrentUserProfilePicture() {
+        return AppBackEnd.currentUserProfilePicture;
     }
 
-    public String getErrorMessage(){
+    String getErrorMessage(){
         return this.errorMessage;
     }
 
-    public boolean register(String email, String name, String password) {
+    boolean register(String email, String name, String password) {
         RequestHelper rh = new RequestHelper();
         rh.urlAddress = this.protocol + "://" + this.server + "/register";
         rh.method = "GET";
@@ -66,7 +67,7 @@ class AppBackEnd extends SQLiteOpenHelper {
         try {
             String result = rh.execute().get();
             Log.d("my.ac.loginByEmail", result);
-            if (result != "") {
+            if (!result.equals("")) {
                 JSONObject json = new JSONObject(result);
                 if (json.getBoolean("success")) {
                     // loginBySession succeed
@@ -84,7 +85,7 @@ class AppBackEnd extends SQLiteOpenHelper {
         return false;
     }
 
-    public boolean loginBySession() {
+    boolean loginBySession() {
         RequestHelper rh = new RequestHelper();
         rh.urlAddress = this.protocol + "://" + this.server + "/loginBySession";
         rh.method = "GET";
@@ -92,7 +93,7 @@ class AppBackEnd extends SQLiteOpenHelper {
         try {
             String result = rh.execute().get();
             Log.d("my.ac.loginBySession", result);
-            if (result != "") {
+            if (!result.equals("")) {
                 JSONObject json = new JSONObject(result);
                 if (json.getBoolean("success")) {
                     // loginBySession succeed
@@ -100,9 +101,9 @@ class AppBackEnd extends SQLiteOpenHelper {
                     this.save();
                     // get current user into
                     JSONObject currentUser =json.getJSONObject("user");
-                    this.currentUserName = currentUser.getString("name");
-                    this.currentUserEmail = currentUser.getString("email");
-                    this.currentUserProfilePicture = currentUser.getString("profile_picture");
+                    AppBackEnd.currentUserName = currentUser.getString("name");
+                    AppBackEnd.currentUserEmail = currentUser.getString("email");
+                    AppBackEnd.currentUserProfilePicture = currentUser.getString("profile_picture");
                     return true;
                 } else {
                     this.errorMessage = json.getString("errorMessage");
@@ -115,7 +116,7 @@ class AppBackEnd extends SQLiteOpenHelper {
         return false;
     }
 
-    public boolean loginByEmail(String email, String password) {
+    boolean loginByEmail(String email, String password) {
         RequestHelper rh = new RequestHelper();
         rh.urlAddress = this.protocol + "://" + this.server + "/loginByEmail";
         rh.method = "GET";
@@ -124,7 +125,7 @@ class AppBackEnd extends SQLiteOpenHelper {
         try {
             String result = rh.execute().get();
             Log.d("my.ac.loginByEmail", result);
-            if (result != "") {
+            if (!result.equals("")) {
                 JSONObject json = new JSONObject(result);
                 if (json.getBoolean("success")) {
                     // loginBySession succeed
@@ -132,9 +133,9 @@ class AppBackEnd extends SQLiteOpenHelper {
                     this.save();
                     // get current user info
                     JSONObject currentUser =json.getJSONObject("user");
-                    this.currentUserName = currentUser.getString("name");
-                    this.currentUserEmail = currentUser.getString("email");
-                    this.currentUserProfilePicture = currentUser.getString("profile_picture");
+                    AppBackEnd.currentUserName = currentUser.getString("name");
+                    AppBackEnd.currentUserEmail = currentUser.getString("email");
+                    AppBackEnd.currentUserProfilePicture = currentUser.getString("profile_picture");
                     return true;
                 } else {
                     this.errorMessage = json.getString("errorMessage");
@@ -147,15 +148,15 @@ class AppBackEnd extends SQLiteOpenHelper {
         return false;
     }
 
-    public void logout() {
+    void logout() {
         this.session = "";
         this.save();
-        this.currentUserName = "";
-        this.currentUserEmail = "";
-        this.currentUserProfilePicture = "";
+        AppBackEnd.currentUserName = "";
+        AppBackEnd.currentUserEmail = "";
+        AppBackEnd.currentUserProfilePicture = "";
     }
 
-    public boolean move(double lat, double lon) {
+    boolean move(double lat, double lon) {
         RequestHelper rh = new RequestHelper();
         rh.urlAddress = this.protocol + "://" + this.server + "/move";
         rh.method = "GET";
@@ -165,7 +166,7 @@ class AppBackEnd extends SQLiteOpenHelper {
         try {
             String result = rh.execute().get();
             Log.d("my.ac.loginByEmail", result);
-            if (result != "") {
+            if (!result.equals("")) {
                 JSONObject json = new JSONObject(result);
                 if (json.getBoolean("success")) {
                     // loginBySession succeed
@@ -183,7 +184,7 @@ class AppBackEnd extends SQLiteOpenHelper {
         return false;
     }
 
-    public boolean changeProfilePicture(String profilePictureFileName) {
+    boolean changeProfilePicture(String profilePictureFileName) {
         Log.d("my.ac.changePP", "start");
         RequestHelper rh = new RequestHelper();
         rh.urlAddress = this.protocol + "://" + this.server + "/changeProfilePicture";
@@ -193,7 +194,7 @@ class AppBackEnd extends SQLiteOpenHelper {
         try {
             String result = rh.execute().get();
             Log.d("my.ac.changePP", result);
-            if (result != "") {
+            if (!result.equals("")) {
                 JSONObject json = new JSONObject(result);
                 if (json.getBoolean("success")) {
                     // loginBySession succeed
@@ -211,7 +212,7 @@ class AppBackEnd extends SQLiteOpenHelper {
         return false;
     }
 
-    public boolean swipeRight(String targetEmail) {
+    boolean swipeRight(String targetEmail) {
         RequestHelper rh = new RequestHelper();
         rh.urlAddress = this.protocol + "://" + this.server + "/swipeRight";
         rh.method = "GET";
@@ -220,7 +221,7 @@ class AppBackEnd extends SQLiteOpenHelper {
         try {
             String result = rh.execute().get();
             Log.d("my.ac.swipRight", result);
-            if (result != "") {
+            if (!result.equals("")) {
                 JSONObject json = new JSONObject(result);
                 if (json.getBoolean("success")) {
                     // loginBySession succeed
@@ -238,7 +239,7 @@ class AppBackEnd extends SQLiteOpenHelper {
         return false;
     }
 
-    public boolean chat(String targetEmail, String message) {
+    boolean chat(String targetEmail, String message) {
         RequestHelper rh = new RequestHelper();
         rh.urlAddress = this.protocol + "://" + this.server + "/chat";
         rh.method = "GET";
@@ -248,7 +249,7 @@ class AppBackEnd extends SQLiteOpenHelper {
         try {
             String result = rh.execute().get();
             Log.d("my.ac.chat", result);
-            if (result != "") {
+            if (!result.equals("")) {
                 JSONObject json = new JSONObject(result);
                 if (json.getBoolean("success")) {
                     // loginBySession succeed
@@ -266,7 +267,7 @@ class AppBackEnd extends SQLiteOpenHelper {
         return false;
     }
 
-    public JSONArray getAvailableUserList(double radius){
+    JSONArray getAvailableUserList(double radius){
         RequestHelper rh = new RequestHelper();
         rh.urlAddress = this.protocol + "://" + this.server + "/getAvailableUserList";
         rh.method = "GET";
@@ -275,7 +276,7 @@ class AppBackEnd extends SQLiteOpenHelper {
         try {
             String result = rh.execute().get();
             Log.d("my.ac.getUserList", result);
-            if (result != "") {
+            if (!result.equals("")) {
                 JSONObject json = new JSONObject(result);
                 if (json.getBoolean("success")) {
                     // loginBySession succeed
@@ -293,16 +294,15 @@ class AppBackEnd extends SQLiteOpenHelper {
         return new JSONArray();
     }
 
-    public JSONArray getMatchList(String targetEmail){
+    JSONArray getMatchList(){
         RequestHelper rh = new RequestHelper();
         rh.urlAddress = this.protocol + "://" + this.server + "/getMatchList";
         rh.method = "GET";
         rh.requestParams.put("session", this.session);
-        rh.requestParams.put("targetEmail", targetEmail);
         try {
             String result = rh.execute().get();
             Log.d("my.ac.getMatchList", result);
-            if (result != "") {
+            if (!result.equals("")) {
                 JSONObject json = new JSONObject(result);
                 if (json.getBoolean("success")) {
                     // loginBySession succeed
@@ -320,7 +320,7 @@ class AppBackEnd extends SQLiteOpenHelper {
         return new JSONArray();
     }
 
-    public JSONArray getChatList(String targetEmail){
+    JSONArray getChatList(String targetEmail){
         RequestHelper rh = new RequestHelper();
         rh.urlAddress = this.protocol + "://" + this.server + "/getChatList";
         rh.method = "GET";
@@ -329,7 +329,7 @@ class AppBackEnd extends SQLiteOpenHelper {
         try {
             String result = rh.execute().get();
             Log.d("my.ac.getMatchList", result);
-            if (result != "") {
+            if (!result.equals("")) {
                 JSONObject json = new JSONObject(result);
                 if (json.getBoolean("success")) {
                     // loginBySession succeed
@@ -347,7 +347,7 @@ class AppBackEnd extends SQLiteOpenHelper {
         return new JSONArray();
     }
 
-    public void save() {
+    void save() {
         SQLiteDatabase db = this.getWritableDatabase();
         String[] params = new String[]{this.session, this.protocol, this.server, String.valueOf(this.radius)};
         db.execSQL("UPDATE backEnd SET session=?, protocol=?, server=?, radius=?", params);

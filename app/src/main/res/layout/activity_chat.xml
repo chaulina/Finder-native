@@ -12,9 +12,11 @@
     tools:context="com.finder.gofrendi.finder.ChatActivity"
     android:gravity="bottom">
 
-    <ListView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="341dp" />
+        android:id="@+id/layout_chat_list"
+        android:orientation="vertical"
+        android:layout_height="300dp" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -34,6 +36,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/button_chat_send"
+            android:onClick="onButtonChatSendClick"
             android:layout_weight="0.06" />
+
     </LinearLayout>
 </LinearLayout>

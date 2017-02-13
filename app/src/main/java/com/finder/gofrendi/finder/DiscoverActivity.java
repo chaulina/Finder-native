@@ -97,6 +97,7 @@ public class DiscoverActivity extends AppCompatActivity {
         else{
             buttonDiscoverYes.setEnabled(false);
             buttonDiscoverNo.setEnabled(false);
+            textViewDiscoverName.setText("");
             imageViewDiscoverPP.setImageResource(R.mipmap.ic_launcher);
         }
     }

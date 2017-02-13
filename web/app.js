@@ -6,7 +6,6 @@ var http = require('http');
 var fs = require('fs');
 var sqlite3 = require('sqlite3').verbose();
 var app = express();
-var io = require('socket.io')(http.Server(app));
 
 // global functions ==================================================================
 
@@ -29,11 +28,20 @@ function successResponse(res){
 
 // events & routes ===================================================================
 
-io.on('connection', function(){ /* … */ });
 
+app.set('port', (process.env.PORT || 5000));
+server = app.listen(app.get('port'), function () {
+    console.log('Finder web service run at port ' + app.get('port'));
+});
 app.use('/public', express.static('public'));
+app.use('/socket.io', express.static('node_modules/socket.io-client/dist'));
 app.use(fileUpload());
 app.engine('html', require('ejs').renderFile);
+
+var io = require('socket.io')(server);
+
+io.on('connection', function(){ /* … */ });
+
 
 app.get('/', function (req, res) {
     runDb(null, function(db){
@@ -310,11 +318,6 @@ app.get('/test', function(req, res){
     // real job
     var db = new sqlite3.Database(":memory:");
     runDb(db, test, callbackError);
-});
-
-app.set('port', (process.env.PORT || 5000));
-app.listen(app.get('port'), function () {
-    console.log('Finder web service run at port ' + app.get('port'));
 });
 
 
@@ -601,6 +604,8 @@ function chat(db, session, targetEmail, message, callbackSuccess, callbackError)
             db.run(sql, params);
             // push notification to clients
             io.emit('chat-to-'+targetEmail, message);
+            console.log('chat-to-'+targetEmail);
+            console.log(message);
             if(typeof callbackSuccess === 'function'){
                 callbackSuccess(db, currentUser);
             }

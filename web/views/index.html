@@ -95,7 +95,12 @@
 
     </body>
     <script src="public/jquery-3.1.1.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
     <script>
+        // socket
+        var socket = io();
+        socket.on('connect', function(){console.log('yay connected');});
+        // login
         $('#login').click(function(){
             $.ajax({
                 'url' : 'loginByEmail',
